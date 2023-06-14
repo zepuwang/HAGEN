@@ -40,6 +40,7 @@ class HAGENSupervisor:
         self.num_nodes = int(self._model_kwargs.get('num_nodes', 1))
         self.input_dim = int(self._model_kwargs.get('input_dim', 1))
         self.seq_len = int(self._model_kwargs.get('seq_len'))  
+        
         self.output_dim = int(self._model_kwargs.get('output_dim', 1))
         self.use_curriculum_learning = bool(self._model_kwargs.get('use_curriculum_learning', False))
         self.horizon = int(self._model_kwargs.get('horizon', 1)) 
@@ -135,9 +136,13 @@ class HAGENSupervisor:
             threshold = np.quantile(y_pred_reshape_sigmoid, self._threshold)
             y_pred_reshape_sigmoid[y_pred_reshape_sigmoid >= threshold] = 1
             y_pred_reshape_sigmoid[y_pred_reshape_sigmoid < threshold] = 0
-            
+            print(y_truth_reshape.shape)
+            print(y_truth_reshape)
+            print(y_pred_reshape_sigmoid.shape)
+            print(y_pred_reshape_sigmoid)
             macro_f1 = metrics_sk.f1_score(y_truth_reshape, y_pred_reshape_sigmoid, average = 'macro')
             micro_f1 = metrics_sk.f1_score(y_truth_reshape, y_pred_reshape_sigmoid, average = 'micro')
+
             cur_flag =  macro_f1 * 0.6 + micro_f1 * 0.4
             self._logger.info('{}: The average macro-F1 score is {:.5f}, average micro-F1 score is {:.5f}'.format(dataset, macro_f1, micro_f1))
             if dataset == 'test':
@@ -149,7 +154,7 @@ class HAGENSupervisor:
                 return mean_loss, update_best, np.mean(l1s), np.mean(l2s), macro_f1, micro_f1
 
     def _train(self, base_lr,
-               steps, patience=50, epochs=100, lr_decay_ratio=0.1, log_every=1, save_model=1,
+               steps, patience=50, epochs=1, lr_decay_ratio=0.1, log_every=1, save_model=1,
                test_every_n_epochs=1, epsilon=1e-8, **kwargs):
         min_val_loss = float('inf')
         wait = 0
@@ -176,6 +181,8 @@ class HAGENSupervisor:
                 optimizer.zero_grad()
                 x, y = self._prepare_data(x, y)
                 output, adj_mx = self.hagen_model(x, y, batches_seen)
+                
+               
                 if batches_seen == 0:
                     optimizer = torch.optim.Adam(self.hagen_model.parameters(), lr=base_lr, eps=epsilon)
                 loss, l1, l2 = self._compute_loss(y, output, 'train', adj_mx, self._lmd)

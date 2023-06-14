@@ -1,0 +1,46 @@
+---
+base_dir: data/model
+log_level: INFO
+data:
+  batch_size: 15
+  dataset_dir: crime-data/CRIME-LA/8
+  test_batch_size: 15
+  val_batch_size: 15
+  graph_pkl_filename: crime-data/sensor_graph/adj_mx_la.pkl
+  num_nodes: 113
+  input_dim: 8
+
+
+model:
+  seq_len: 8
+  hidden_dim_type: 32
+  output_dim_type: 16
+  hidden_dim_1: 32
+  hidden_dim_2: 32
+  k: 3
+  adj_matrix: 0
+  output_dim_adj: 0
+  input_dim_main: 16
+  hidden_dim_main: 64
+  output_dim_main: 1
+  #num_nodes: 113
+  #input_dim: 8
+  #horizon: 1
+  
+
+train:
+  base_lr: 0.01
+  dropout: 0
+  epoch: 0
+  epochs: 200
+  epsilon: 1.0e-3
+  global_step: 0
+  lr_decay_ratio: 0.1
+  lmd: 0.01
+  max_grad_norm: 5
+  max_to_keep: 100
+  min_learning_rate: 2.0e-06
+  optimizer: adam
+  patience: 15
+  steps: [10, 30, 40, 50]
+  test_every_n_epochs: 10

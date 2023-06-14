@@ -1,0 +1,5 @@
+2023-06-13 13:29:43,695 - model.hagen_supervisor - INFO - Log directory: ./logs/8/ds4_rl3_gs50_alpha5_pa15_0613132943
+2023-06-13 13:29:43,740 - model.hagen_supervisor - INFO - Model created
+2023-06-13 13:29:43,744 - model.hagen_supervisor - INFO - Start training ...
+2023-06-13 13:29:43,744 - model.hagen_supervisor - INFO - num_batches:12
+2023-06-13 13:29:46,530 - model.hagen_supervisor - INFO - Total trainable parameters 1239238
